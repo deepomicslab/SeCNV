@@ -51,9 +51,13 @@ cd Script
 python SeCNV.py input_fold output_fold ref_file
 ```
 Input\_fold is where the bam files are, output\_file is where the output files will be (an empty fold is recommended), and the ref\_file is the reference hg19 or hg38. Other parameters are shown bellow:
+
 -r or --ref:	The reference used (hg19 or hg38) [default: hg19].
+
 -b or --bin\_size:	The length of bin [default: 500000].
+
 -p or --pattern:    The pattern of bam file names [default: \*dedup.bam]  
+
 For more information, please use python SeCNV.py -h or python SeCNV.py --help.
 
 ### Maintainer
