@@ -47,7 +47,7 @@ Please change **hg19.fa** to your reference location and **file\_name** to your 
 ### SeCNV
 Next, SeCNV take the bam files as input to profile copy number.
 ```shell
-cd Script
+cd Scripts
 python SeCNV.py input_fold output_fold ref_file
 ```
 Input\_fold is where the bam files are, output\_file is where the output files will be (an empty fold is recommended), and the ref\_file is the reference hg19 or hg38. Other parameters are shown bellow:
