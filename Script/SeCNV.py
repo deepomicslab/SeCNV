@@ -7,8 +7,8 @@ Usage:
 Options:
     -r --ref=<rn>   The reference used (hg19 or hg38) [default: hg19].
     -b --bin_size=<bl>  The length of bin [default: 500000].
-    -min --min_ploidy=<p>  The length of bin [default: 1.5].
-    -max --max_ploidy=<p>  The length of bin [default: 5.0].
+    -min --min_ploidy=<p>  The minimal ploidy [default: 1.5].
+    -max --max_ploidy=<p>  The maximal ploidy [default: 5.0].
     -p --pattern=<pn>    The pattern of bam file names [default: *dedup.bam].
     -K --K_neighbor=<n>	The number of neighbors [default: 5].
     -h --help   Show this screen.
