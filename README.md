@@ -56,7 +56,7 @@ Input\_fold is where the bam files are, output\_file is where the output files w
 + -b or --bin\_size:	The length of bin [default: 500000].
 + -min or --min\_ploidy:	The minimal ploidy [default: 1.5].
 + -max or --max\_ploidy:	The maximal ploidy [default: 5].
-+ -p or --pattern:    The pattern of bam file names [default: \*dedup.bam]  
++ -p or --pattern:    The pattern of bam file names [default: \*dedup.bam]. 
 
 For more information, please use python SeCNV.py -h or python SeCNV.py --help.
 
