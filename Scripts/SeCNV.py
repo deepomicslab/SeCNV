@@ -10,7 +10,7 @@ Options:
     -min --min_ploidy=<p>  The minimal ploidy [default: 1.5].
     -max --max_ploidy=<p>  The maximal ploidy [default: 5.0].
     -p --pattern=<pn>    The pattern of bam file names [default: *dedup.bam].
-    -K --K_neighbor=<n>	The number of neighbors [default: 5].
+    -K --K_neighbor=<n>  The number of neighbors [default: 5].
     -h --help   Show this screen.
     -v --version    Show version.
 """
@@ -19,7 +19,6 @@ import os
 import time
 
 def main(arguments):
-    start_time = time.time()
     bam_path = arguments.get("<bam_path>")
     output_path = arguments.get("<output_path>")
     ref = arguments.get("<ref_file>")
@@ -31,8 +30,6 @@ def main(arguments):
     K = arguments.get("--K_neighbor")
     os.system("python preprocess.py %s %s %s %s %s %s"%(output_path, ref, bam_path, bam_pattern, bin_size, ref_type))
     os.system("python call_cn.py %s %s %s %s"%(output_path, min_ploidy, max_ploidy, K))
-    stop_time = time.time()
-    print(stop_time-start_time)
 
 if __name__ == "__main__":
     arguments = docopt(__doc__, version="SeCNV 0.1.0")
