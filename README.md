@@ -1,5 +1,5 @@
 # SeCNV
-SeCNV, a single cell copy number profiling tools.
+SeCNV, a single cell copy number profiling tool.
 
 ## Prerequisite
 The scripts are written in Python3. Following Python packages should be installed:
