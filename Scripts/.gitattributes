@@ -1,0 +1,2 @@
+hg19_mappability.bigWig filter=lfs diff=lfs merge=lfs -text
+hg38_mappability.bigWig filter=lfs diff=lfs merge=lfs -text
