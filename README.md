@@ -2,6 +2,11 @@
 SeCNV, a single cell copy number profiling tool.
 
 ## Prerequisite
+Please install Git LFS and use the following command to clone the repository.
+```shell
+git lfs clone https://github.com/deepomicslab/SeCNV.git
+```
+
 The scripts are written in Python3. Following Python packages should be installed:
 + numpy
 + pandas
