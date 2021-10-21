@@ -110,7 +110,7 @@ def Bias_norm(Y, norm_cell_index):
 
 def make_adj_matrix(matrix, K, sigma):
     if K == "auto_set":
-        K = int(0.05 * matrix.shape[1])
+        K = 5
     else:
         K = int(K)
     if sigma == "auto_set":
@@ -240,8 +240,6 @@ def main():
         chrom_matrix = cov_matrix[indexes]
         matrix = chrom_matrix[:, abnorm_cell_index]
         adj_matrix = make_adj_matrix(matrix, K, sigma)
-        # random_walk_sample = random_walk(matrix)
-        # adj_matrix = random_walk_sample.Gaussian_kernel_local(K)
         dp_process = DP_process(adj_matrix, 20)
         dp_process.dp_init()
         dp_process.dp_process()
