@@ -1,6 +1,8 @@
 # SeCNV
 SeCNV, a single cell copy number profiling tool.
 
+![image](https://github.com/deepomicslab/SeCNV/blob/main/Framework.pdf)
+
 ## Prerequisite
 Please install Git LFS and use the following command to clone the repository.
 ```shell
