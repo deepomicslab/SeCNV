@@ -19,6 +19,7 @@ Since there are some Bioinformatic pre-processing steps in SeCNV pipeline, follo
 + samtools
 + bedtools
 + bigWigAverageOverBed
++ pyfaidx
 + picard 
 
 ## Data preparation
