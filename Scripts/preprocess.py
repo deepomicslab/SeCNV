@@ -9,7 +9,7 @@ bam_files = os.path.join(sys.argv[3], sys.argv[4])
 bin_size = int(sys.argv[5])
 ref_type = sys.argv[6]
 
-chosen_chr = ["chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9", "chr10", "chr11", "chr12", "chr13", "chr14",  "chr15", "chr16", "chr17", "chr18", "chr19", "chr20", "chr21", "chr22"]
+chosen_chr = ["chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9", "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17", "chr18", "chr19", "chr20", "chr21", "chr22"]
 
 def construct_bins(ref, bin_size):
     print("Constructing genome-wide consecutive bins...")
@@ -111,7 +111,7 @@ def cal_cov(bed_file, bam_files):
     f.close()
     read_num_list = np.array(read_num_list)
     print("Calculating coverage...")
-    os.system("bedtools multicov -bams %s -bed %s -q 60 >%s"%(bam_files, bed_file, genome_cov_raw))
+    os.system('/bin/bash -c "bedtools multicov -bams %s -bed %s -q 60 >%s"'%(bam_files, bed_file, genome_cov_raw))
     raw_cov = []    
     loc = []
     f = open(genome_cov_raw)
@@ -140,33 +140,20 @@ def cal_cov(bed_file, bam_files):
     f.write("stop")
     f.write("\t")
     for sample in sample_list:
-        f.write(sample.split("\\")[-1].split(".")[0])
+        f.write(sample.split("/")[-1].split(".")[0])
         f.write("\t")
     f.write("\n")
     for i in range(raw_cov.shape[0]):
-        if 0 in raw_cov[i]:
-            if np.count_nonzero(raw_cov[i])>len(raw_cov[i])/2:
-                f.write(loc[i,0])
-                f.write("\t")
-                f.write(loc[i,1])
-                f.write("\t")
-                f.write(loc[i,2])
-                f.write("\t")
-                for j in range(raw_cov.shape[1]):
-                    f.write(str(raw_cov[i,j]))
-                    f.write("\t")
-                f.write("\n")
-        else:
-            f.write(loc[i,0])
+        f.write(loc[i,0])
+        f.write("\t")
+        f.write(loc[i,1])
+        f.write("\t")
+        f.write(loc[i,2])
+        f.write("\t")
+        for j in range(raw_cov.shape[1]):
+            f.write(str(raw_cov[i,j]))
             f.write("\t")
-            f.write(loc[i,1])
-            f.write("\t")
-            f.write(loc[i,2])
-            f.write("\t")
-            for j in range(raw_cov.shape[1]):
-                f.write(str(raw_cov[i,j]))
-                f.write("\t")
-            f.write("\n")
+        f.write("\n")
     f.close()
 
 

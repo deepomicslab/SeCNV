@@ -79,31 +79,43 @@ def get_norm_cell(cov_data):
     dens = np.exp(kde.score_samples(np.arange(0, 1, 0.001).reshape(-1, 1)))
     peaks_pos = signal.argrelextrema(dens, np.greater)[0]
     first_peak = np.arange(0, 1, 0.001)[peaks_pos][0]
-    density_list = Gaussian_kernel(cov_std, first_peak, 0.01)
-    norm_index = []
-    abnorm_index = []
-    for i in range(len(density_list)):
-        if density_list[i] > 1e-3:
-            norm_index.append(i)
-        else:
+    if first_peak < 0.2:
+        density_list = Gaussian_kernel(cov_std, first_peak, 0.01)
+        norm_index = []
+        abnorm_index = []
+        for i in range(len(cov_std)):
+            if density_list[i] > 1e-3:
+                norm_index.append(i)
+            else:
+                abnorm_index.append(i)
+    else:
+        print("Warning: No normal cell detected! Use the reference to correct bias. Please make sure the bin size is 50 kb.")
+        norm_index = []
+        abnorm_index = []
+        for i in range(len(cov_std)):
             abnorm_index.append(i)
+
     return cov_std, norm_index, abnorm_index
 
 def Bias_norm(Y, norm_cell_index):
-    Y =Y.T
-    norm_cell_Y = Y[norm_cell_index]
-    bias_matrix = []
-    for cell in norm_cell_Y:
-        bias_list = []
-        median = np.median(cell)
-        for bin in cell:
-            bias = bin/median
-            bias_list.append(bias)
-        bias_list = np.array(bias_list)
-        bias_matrix.append(bias_list)
-    bias_matrix = np.array(bias_matrix)
-    ave_bias = bias_matrix.mean(axis=0)
-    ave_bias = np.where(ave_bias==0,1,ave_bias)
+    Y = Y.T
+    if len(norm_cell_index) > 0:
+        norm_cell_Y = Y[norm_cell_index]
+        bias_matrix = []
+        for cell in norm_cell_Y:
+            bias_list = []
+            median = np.median(cell)
+            for bin in cell:
+                bias = bin/median
+                bias_list.append(bias)
+            bias_list = np.array(bias_list)
+            bias_matrix.append(bias_list)
+        bias_matrix = np.array(bias_matrix)
+        ave_bias = bias_matrix.mean(axis=0)
+        ave_bias = np.where(ave_bias==0, 1, ave_bias)
+    else:
+        ave_bias = np.loadtxt("bias.txt")
+    
     gc_nor_Y = Y / ave_bias
 
     return gc_nor_Y.T
@@ -148,7 +160,7 @@ class DP_process:
         self.dlogd_sum = np.zeros(self.n)
         self.dlogd_sum[0] = self.pre_table[0][0] * np.log2(self.pre_table[0][0])
         for bin in range(1, self.n):
-            self.dlogd_sum[bin] = self.dlogd_sum[bin - 1] + self.pre_table[bin][bin] * np.log2(self.pre_table[bin][bin])
+            self.dlogd_sum[bin] = self.dlogd_sum[bin - 1] + self.pre_table[bin][bin] * np.log2(self.pre_table[bin][bin]+1e-7)
 
     def calculate_se(self, g, V_p, V):
         if (V == 0):
@@ -203,6 +215,7 @@ class DP_process:
         for i in range(1, self.k):
             self.boundaries.append(int(self.index_table[self.boundaries[i-1]][self.k-i]))
         self.boundaries.reverse()
+        print(self.boundaries)
         return self.boundaries
 
 
@@ -211,9 +224,9 @@ def average_seg(boundaries, chrom_matrix):
     for i in range(len(chrom_matrix)):
         for j in range(len(boundaries)):
             if j == 0:
-                chrom_matrix[i][0:boundaries[j]] = np.median(chrom_matrix[i][0:boundaries[j]])
+                chrom_matrix[i][0:boundaries[j]+1] = np.median(chrom_matrix[i][0:boundaries[j]+1])
             else:
-                chrom_matrix[i][boundaries[j-1]:boundaries[j]] = np.median(chrom_matrix[i][boundaries[j-1]:boundaries[j]])
+                chrom_matrix[i][boundaries[j-1]+1:boundaries[j]+1] = np.median(chrom_matrix[i][boundaries[j-1]+1:boundaries[j]+1])
 
     return chrom_matrix.T
 

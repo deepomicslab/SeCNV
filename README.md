@@ -25,7 +25,7 @@ Since there are some Bioinformatic pre-processing steps in SeCNV pipeline, follo
 + picard 
 
 ## Data preparation
-To run SeCNV, two pre-prepared files, hg19\_mappability.bigWig and hg38\_mappability.bigWig, should be downloaded from ### and put under the Script folder.
+To run SeCNV, the bigwig files, hg19\_mappability.bigWig and hg38\_mappability.bigWig, should be downloaded from [Google Drive](https://drive.google.com/drive/folders/1XGuXa9muRtOiAjtz1J4gWO5Qk3c5-PwS?usp=sharing) and put under the Script folder.
 
 The reference hg19 or hg38, which can be downloaded from NCBI, should be prepared and built index. 
 
@@ -53,7 +53,7 @@ java -jar picard.jar BuildBamIndex I=file_name.sorted.rg.dedup.bam
 Please change **hg19.fa** to your reference location and **file\_name** to your FASTQ file name.
  
 ### SeCNV
-Next, SeCNV take the bam files as input to profile copy number.
+Next, SeCNV takes the bam files as input to profile copy number.
 ```shell
 cd Scripts
 python SeCNV.py input_fold output_fold ref_file
