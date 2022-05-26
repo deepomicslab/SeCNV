@@ -67,6 +67,7 @@ Input\_fold is where the bam files are, output\_file is where the output files w
 + -p or --pattern:    The pattern of bam file names [default: \*dedup.bam]. 
 + -K or --topK:	The K largest distances used to construct adjacency matrix [default: auto\_set].
 + -s or --sigma:	The standard deviation of the Gaussian kernel function [default: auto\_set].
++ -n or --normal\_cell  The file with normal cell IDs [default: None].
 
 For more information, please use python SeCNV.py -h or python SeCNV.py --help.
 

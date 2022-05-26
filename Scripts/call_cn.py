@@ -15,6 +15,7 @@ min_ploidy = float(sys.argv[2])
 max_ploidy = float(sys.argv[3])
 K = sys.argv[4]
 sigma = sys.argv[5]
+normal_cell_file = sys.argv[6]
 
 def read_matrix(file_name):
     f = open(file_name)
@@ -73,27 +74,39 @@ def Gaussian_kernel(data,mu,sig):
 
     return density
 
-def get_norm_cell(cov_data):
+def get_norm_cell(cov_data, sample_list, normal_cell_file):
     cov_std = stats.variation(cov_data, axis=0)
-    kde = KernelDensity(kernel="gaussian", bandwidth=0.01).fit(cov_std.reshape(-1, 1))
-    dens = np.exp(kde.score_samples(np.arange(0, 1, 0.001).reshape(-1, 1)))
-    peaks_pos = signal.argrelextrema(dens, np.greater)[0]
-    first_peak = np.arange(0, 1, 0.001)[peaks_pos][0]
-    if first_peak < 0.2:
-        density_list = Gaussian_kernel(cov_std, first_peak, 0.01)
+    if normal_cell_file == "None":
+        kde = KernelDensity(kernel="gaussian", bandwidth=0.01).fit(cov_std.reshape(-1, 1))
+        dens = np.exp(kde.score_samples(np.arange(0, 1, 0.001).reshape(-1, 1)))
+        peaks_pos = signal.argrelextrema(dens, np.greater)[0]
+        first_peak = np.arange(0, 1, 0.001)[peaks_pos][0]
+        print(first_peak)
+        if first_peak < 0.2:
+            density_list = Gaussian_kernel(cov_std, first_peak, 0.01)
+            norm_index = []
+            abnorm_index = []
+            for i in range(len(cov_std)):
+                if density_list[i] > 1e-3:
+                    norm_index.append(i)
+                else:
+                    abnorm_index.append(i)
+        else:
+            print("Warning: No normal cell detected! Use reference to correct bias. Please make sure the bin size is 50 kb.")
+            norm_index = []
+            abnorm_index = []
+            for i in range(len(cov_std)):
+                abnorm_index.append(i)
+    else:
+        print("Use the cells in %s as the normal cells."%normal_cell_file)
+        normal_cell_id = np.loadtxt(normal_cell_file, dtype=str)
         norm_index = []
         abnorm_index = []
-        for i in range(len(cov_std)):
-            if density_list[i] > 1e-3:
+        for i in range(len(sample_list)):
+            if sample_list[i] in normal_cell_id:
                 norm_index.append(i)
             else:
                 abnorm_index.append(i)
-    else:
-        print("Warning: No normal cell detected! Use the reference to correct bias. Please make sure the bin size is 50 kb.")
-        norm_index = []
-        abnorm_index = []
-        for i in range(len(cov_std)):
-            abnorm_index.append(i)
 
     return cov_std, norm_index, abnorm_index
 
@@ -116,8 +129,9 @@ def Bias_norm(Y, norm_cell_index):
     else:
         ave_bias = np.loadtxt("bias.txt")
     
-    gc_nor_Y = Y / ave_bias
-
+    # gc_nor_Y = Y / ave_bias
+    gc_nor_Y = Y
+    
     return gc_nor_Y.T
 
 def make_adj_matrix(matrix, K, sigma):
@@ -126,7 +140,7 @@ def make_adj_matrix(matrix, K, sigma):
     else:
         K = int(K)
     if sigma == "auto_set":
-        sigma = np.median(matrix)/2
+        sigma = np.median(matrix)
     else:
         sigma = float(sigma)
 
@@ -138,8 +152,10 @@ def make_adj_matrix(matrix, K, sigma):
             temp = temp[-K:]
             adj_matrix[i][j] = np.exp(-np.sum(temp)/sigma**2)
             adj_matrix[j][i] = np.exp(-np.sum(temp)/sigma**2)
+    print(adj_matrix) 
+    print(np.sum(adj_matrix))
     adj_matrix = KR_norm_juicer.KR_norm(adj_matrix)
-
+    
     return adj_matrix
 
 class DP_process:
@@ -243,16 +259,17 @@ def main():
 
     Y, chr_name, bin_list, sample_list = read_matrix(os.path.join(work_path, "genome_cov.bed"))
     print("Begin")
-    var, norm_cell_index, abnorm_cell_index = get_norm_cell(Y)
+    var, norm_cell_index, abnorm_cell_index = get_norm_cell(Y, sample_list, normal_cell_file)
     cov_matrix = Bias_norm(Y, norm_cell_index)
-    chosen_chr = ["chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9", "chr10", "chr11", "chr12",
-                  "chr13", "chr14", "chr15", "chr16", "chr17", "chr18", "chr19", "chr20", "chr21", "chr22"]
+    chosen_chr = ["chr1", "chr2", "chr3", "chr4", "chr5", "chr6", "chr7", "chr8", "chr9", "chr10", "chr11", "chr12", "chr13", "chr14", "chr15", "chr16", "chr17", "chr18", "chr19", "chr20", "chr21", "chr22"]
     for chrom in chosen_chr:
         print("process %s..."%chrom)
         indexes = np.where(chr_name == chrom)
         chrom_matrix = cov_matrix[indexes]
-        matrix = chrom_matrix[:, abnorm_cell_index]
+        # matrix = chrom_matrix[:, abnorm_cell_index]
+        matrix = chrom_matrix
         adj_matrix = make_adj_matrix(matrix, K, sigma)
+        print(adj_matrix.shape)
         dp_process = DP_process(adj_matrix, 20)
         dp_process.dp_init()
         dp_process.dp_process()

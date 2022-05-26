@@ -1,6 +1,6 @@
 """SeCNV
 Usage:
-    SeCNV.py <bam_path> <output_path> <ref_file> [--ref=<rn>] [--bin_size=<bl>] [--min_ploidy=<p>] [--max_ploidy=<p>] [--pattern=<pn>] [--topK=<n>] [--sigma=<n>]
+    SeCNV.py <bam_path> <output_path> <ref_file> [--ref=<rn>] [--bin_size=<bl>] [--min_ploidy=<p>] [--max_ploidy=<p>] [--pattern=<pn>] [--topK=<n>] [--sigma=<n>] [--normal_cell=<n>]
     SeCNV.py (-h | --help)
     SeCNV.py --version
 
@@ -12,6 +12,7 @@ Options:
     -p --pattern=<pn>    The pattern of bam file names [default: *dedup.bam].
     -K --topK=<n>  The K largest distances used to construct adjacency matrix [default: auto_set].
     -s --sigma=<n>  The standard deviation of the Gaussian kernel function [default: auto_set].
+    -n --normal_cell=<n>  The file with normal cell IDs [default: None].
     -h --help   Show this screen.
     -v --version    Show version.
 """
@@ -31,8 +32,9 @@ def main(arguments):
     bam_pattern = arguments.get("--pattern")
     K = str(arguments.get("--topK"))
     sigma = str(arguments.get("--sigma"))
+    normal_cell = str(arguments.get("--normal_cell"))
     os.system("python preprocess.py %s %s %s %s %s %s"%(output_path, ref, bam_path, bam_pattern, bin_size, ref_type))
-    os.system("python call_cn.py %s %s %s %s %s"%(output_path, min_ploidy, max_ploidy, K, sigma))
+    os.system("python call_cn.py %s %s %s %s %s %s"%(output_path, min_ploidy, max_ploidy, K, sigma, normal_cell))
     stop_time = time.time()
     print("Finish. Cost time %s s"%(stop_time-start_time))
 
