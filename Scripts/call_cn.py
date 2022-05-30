@@ -92,7 +92,7 @@ def get_norm_cell(cov_data, sample_list, normal_cell_file):
                 else:
                     abnorm_index.append(i)
         else:
-            print("Warning: No normal cell detected! Use reference to correct bias. Please make sure the bin size is 50 kb.")
+            print("Warning: No normal cell detected! Use reference to correct bias. Please make sure the bin size is 500 kb.")
             norm_index = []
             abnorm_index = []
             for i in range(len(cov_std)):
