@@ -73,3 +73,15 @@ For more information, please use python SeCNV.py -h or python SeCNV.py --help.
 
 ### Maintainer
 WANG Ruohan ruohawang2-c@my.cityu.edu.hk
+
+### Reference
+@article{ruohan2022resolving,  
+  title={Resolving single-cell copy number profiling for large datasets},  
+  author={Ruohan, Wang and Yuwei, Zhang and Mengbo, Wang and Xikang, Feng and Jianping, Wang and Shuai Cheng, Li},  
+  journal={Briefings in Bioinformatics},  
+  volume={23},  
+  number={4},  
+  pages={bbac264},  
+  year={2022},  
+  publisher={Oxford University Press}  
+}
