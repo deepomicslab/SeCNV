@@ -40,7 +40,8 @@ def read_matrix(file_name):
         sample_list[i] = str(sample_list[i]).split("/")[-1]
     chr_name = np.array(chr_name)
     f.close()
-    return matrix, chr_name, bin_list, sample_list
+    
+	return matrix, chr_name, bin_list, sample_list
 
 def sose(scnp):
     rcnp = np.round(scnp)
