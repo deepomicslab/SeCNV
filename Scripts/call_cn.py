@@ -129,8 +129,7 @@ def Bias_norm(Y, norm_cell_index):
     else:
         ave_bias = np.loadtxt("bias.txt")
     
-    # gc_nor_Y = Y / ave_bias
-    gc_nor_Y = Y
+    gc_nor_Y = Y / ave_bias
     
     return gc_nor_Y.T
 
@@ -152,9 +151,8 @@ def make_adj_matrix(matrix, K, sigma):
             temp = temp[-K:]
             adj_matrix[i][j] = np.exp(-np.sum(temp)/sigma**2)
             adj_matrix[j][i] = np.exp(-np.sum(temp)/sigma**2)
-    print(adj_matrix) 
-    print(np.sum(adj_matrix))
-    adj_matrix = KR_norm_juicer.KR_norm(adj_matrix)
+    
+	adj_matrix = KR_norm_juicer.KR_norm(adj_matrix)
     
     return adj_matrix
 
