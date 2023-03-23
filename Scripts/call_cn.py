@@ -268,7 +268,6 @@ def main():
         # matrix = chrom_matrix[:, abnorm_cell_index]
         matrix = chrom_matrix
         adj_matrix = make_adj_matrix(matrix, K, sigma)
-        print(adj_matrix.shape)
         dp_process = DP_process(adj_matrix, 20)
         dp_process.dp_init()
         dp_process.dp_process()
