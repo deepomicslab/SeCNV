@@ -145,14 +145,15 @@ def make_adj_matrix(matrix, K, sigma):
         sigma = float(sigma)
 
     adj_matrix = np.zeros((matrix.shape[0], matrix.shape[0]))
-    for i in range(matrix.shape[0]):
+    
+	for i in range(matrix.shape[0]):
         for j in range(i+1, matrix.shape[0]):
             temp = (matrix[i]-matrix[j]) ** 2
             temp.sort()
             temp = temp[-K:]
             adj_matrix[i][j] = np.exp(-np.sum(temp)/sigma**2)
             adj_matrix[j][i] = np.exp(-np.sum(temp)/sigma**2)
-    
+
 	adj_matrix = KR_norm_juicer.KR_norm(adj_matrix)
     
     return adj_matrix
