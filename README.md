@@ -25,7 +25,7 @@ Since there are some Bioinformatic pre-processing steps in SeCNV pipeline, follo
 + picard 
 
 ## Data preparation
-To run SeCNV, the bigwig files, hg19\_mappability.bigWig and hg38\_mappability.bigWig, should be downloaded from [Google Drive](https://drive.google.com/drive/folders/1XGuXa9muRtOiAjtz1J4gWO5Qk3c5-PwS?usp=sharing) and put under the Script folder.
+To run SeCNV, the bigwig files, hg19\_mappability.bigWig and hg38\_mappability.bigWig, should be downloaded from [Zenodo](https://zenodo.org/records/14407911) and put under the Script folder.
 
 The reference hg19 or hg38, which can be downloaded from NCBI, should be prepared and built index. 
 
